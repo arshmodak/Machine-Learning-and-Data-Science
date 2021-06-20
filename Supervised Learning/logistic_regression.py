@@ -268,7 +268,8 @@ def printMetrics(y, y_pred, name_to_print, method, set_):
 
     """
     
-    print("\nPrinting Metrics for {} from {} on the {} set.".format(name_to_print.capitalize(), method.capitalize(), set_.capitalize()))
+    print("\nPrinting Metrics for {} from {} on the {} set.".format(
+        name_to_print.capitalize(), method.capitalize(), set_.capitalize()))
     cfm = confusion_matrix(y, y_pred)
     print("\nConfusion Matrix: ")
     print("\n", cfm)
@@ -309,17 +310,20 @@ def plotDecisionBoundary(X, y, clf, legend, name_to_print, method, set_):
     None.
 
     """
-    plot_decision_regions(X = X, y = y, clf = clf, legend = legend, colors = "#b82121,#0915ed")
+    plot_decision_regions(X = X, y = y, clf = clf, legend = legend, 
+                          colors = "#b82121,#0915ed")
     plt.xlabel("X1")
     plt.ylabel("X2")
-    plt.title("Decision Boundary for {} from {} on the {} set.".format(name_to_print.capitalize(), method.capitalize(), set_.capitalize()))
+    plt.title("Decision Boundary for {} from {} on the {} set.".format(
+        name_to_print.capitalize(), method.capitalize(), set_.capitalize()))
     plt.show()
     
     return
 
 #%%
 
-def main(X_train, X_test, y_train, y_test, modelLabel, method, l_rate, max_it, name_to_print, set_):
+def main(X_train, X_test, y_train, y_test, modelLabel, method, l_rate, max_it,
+         name_to_print, set_):
     """
     
 
@@ -357,24 +361,30 @@ def main(X_train, X_test, y_train, y_test, modelLabel, method, l_rate, max_it, n
         if set_ == "train":
             y_pred = sklearnPredict(X_train, classifier)
             printMetrics(y_train, y_pred, name_to_print, method, set_)
-            plotDecisionBoundary(X_train, y_train, classifier, 2, name_to_print, method, set_)
+            plotDecisionBoundary(X_train, y_train, classifier, 2, 
+                                 name_to_print, method, set_)
         elif set_ == "test":
             y_pred = sklearnPredict(X_test, classifier)
             printMetrics(y_test, y_pred, name_to_print, method, set_)
-            plotDecisionBoundary(X_test, y_test, classifier, 2, name_to_print, method, set_)
+            plotDecisionBoundary(X_test, y_test, classifier, 2, 
+                                 name_to_print, method, set_)
         else:
             print("Invalid set_ parameter")
     elif method == "scratch":
-        classifier  = myLogisticRegression(l_rate, max_it, name_to_print, method, set_)
+        classifier  = myLogisticRegression(l_rate, max_it, 
+                                           name_to_print, method, set_)
         w, b = classifier.logisticRegression(X_train, y_train)
         if set_ == "train":
             y_pred = classifier.predict(X_train)
-            classifier.printMetrics(y_train, y_pred,name_to_print, method, set_)
-            plotDecisionBoundary(X_train, y_train, classifier, 2, name_to_print, method, set_)
+            classifier.printMetrics(y_train, y_pred,
+                                    name_to_print, method, set_)
+            plotDecisionBoundary(X_train, y_train, classifier, 2, 
+                                 name_to_print, method, set_)
         elif set_ == "test":
             y_pred = classifier.predict(X_test)
             classifier.printMetrics(y_test, y_pred,name_to_print, method, set_)
-            plotDecisionBoundary(X_test, y_test, classifier, 2, name_to_print, method, set_)
+            plotDecisionBoundary(X_test, y_test, classifier, 2,
+                                 name_to_print, method, set_)
         else:
             print("Invalid set_ parameter")
     else:
@@ -386,15 +396,21 @@ def main(X_train, X_test, y_train, y_test, modelLabel, method, l_rate, max_it, n
 
 # Driver Code:
 if __name__ == "__main__":
-    dataPath = r"give data path"
+    dataPath = "datsets/lg_dataset.mat"
     X_train, X_test, y_train, y_test = loadData(dataPath)
     
-    modelLabel = "logistic"                         # or "NB" for Naive Bayes
+    modelLabel = "3"                         # or "NB" for Naive Bayes
     method = "scratch"                              # or "sklearn" (only sklearn for NB)
     l_rate = 0.01                                   # learning rate
     max_it = 1000                                   # maximum iterations
     set_ = "test"                                   # or "train"
-    name_to_print = "Logistic Regression"           # change to "Naive Bayes" when using it.
+    
+    if modelLabel == "logistic":
+        name_to_print = "Logistic Regression"
+    elif modelLabel == "NB":
+        name_to_print = "Naive Bayes"
+    else:
+        raise ValueError("invalid modelLabel")
     
     main(X_train, X_test, y_train, y_test, modelLabel, method, l_rate, max_it, name_to_print, set_)
     
